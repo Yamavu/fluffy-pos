@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <style type="text/css">
+
+
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- TODO: Here goes your content! -->
+    <script id="reciept-header-template" type="text/x-handlebars-template">
+        <div class="container">
+            {{#with recipient}}
+            <div class="recipient col-md-6">
+                <div>recipient</div>
+                <div>{{name}}</div>
+                <div>{{adress/street}}</div>
+                <div>{{adress/postalcode}} {{adress/city}} </div>
+                <div>{{adress/country}}</div>
+                <div>{{additionalinfo}}</div>
+            </div>
+            {{/with}} {{#with vendor}}
+            <div style="float:right" class="vendor col-md-6">
+                <div>vendor:</div>
+                <div>{{name}}</div>
+                <div>{{adress/street}}</div>
+                <div>{{adress/postalcode}} {{adress/city}} </div>
+                <div>{{adress/country}}</div>
+                <div>{{additionalinfo}}</div>
+            </div>
+            {{/with}}
+            <br style="clear:both" />
+            <div class="info row">
+                <h1 class="col-md-8 col-md-offset-1">reciept #{{nr}}</h1>
+                <div class="col-md-3">{{formatDate date}}</div>
+                <br style="clear:both" />
+            </div>
+        </div>
+    </script>
+    <script id="reciept-table-template" type="text/x-handlebars-template">
+        <div class="container">
+            <div class="col-md-12">
+                <table class="reciept-table table table-striped">
+                    <thead>
+                        <th class="text-center">Count</th>
+                        <th>Description</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Sum</th>
+                    </thead>
+                    {{#each entries}} {{> reciept-table-entry-template }} {{/each}}
+                    <tfoot style="border-top:1px solid black;font-weight:bold">
+                        <tr>
+                            <td colspan="3" class="text-right">Total:</td>
+                            <td class="text-right">{{formatCurrency total_wTax}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <table class="reciept-info-table table table-striped table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>net total</td>
+                            <td class="text-right">{{formatCurrency total_woTax}}</td>
+                        </tr>
+                        <tr>
+                            <td>tax</td>
+                            <td class="text-right">{{formatCurrency total_Tax}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </script>
+    <script id="reciept-input-template" type="text/x-handlebars-template">
+        <div class="container">
+            <form class=" hidden-print" id="inputform">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <div class="form-group  form-group-lg">
+                            <label class="sr-only" for="inputCount">Count</label>
+                            <input type="number" class="form-control " id="inputCount" placeholder="Count">
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group form-group-lg">
+                            <label class="sr-only col-md-4" for="inputDescription">Description</label>
+                            <input type="text" class="form-control " id="inputDescription" placeholder="Description">
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="form-group  form-group-lg">
+                            <label class="sr-only" for="inputPrice">Price</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">€</div>
+                                <input type="number" class="form-control" id="inputPrice" placeholder="Price" step="0.1" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <button id="inputAccept" type="submit" class="btn btn-default btn-lg">+</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </script>
+    <script id="reciept-table-entry-template" type="text/x-handlebars-template">
+        <tr class="reciept-table-entry-template" id="table_entry_{{index}}">
+            <td class="text-center">{{count}}</td>
+            <td>{{article/description}}</td>
+            <td class="text-right">{{formatCurrency article/price_wTax}}</td>
+            <td class="text-right">{{formatCurrency sum_wTax}}</td>
+        </tr>
+    </script>
+    <script id="some-template" type="text/x-handlebars-template">
+        <table>
+            <thead>
+                <th>Username</th>
+                <th>Real Name</th>
+                <th>Email</th>
+            </thead>
+            <tbody>
+                {{#users}}
+                <tr>
+                    <td>{{username}}</td>
+                    <td>{{firstName}} {{lastName}}</td>
+                    <td>{{email}}</td>
+                </tr>
+                {{/users}}
+            </tbody>
+
+        </table>
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        var data = {
+            "nr": 1,
+            "recipient": {
+                "name": "John Smith",
+                "adress": {
+                    street: "Example Street 1",
+                    "postalcode": "1010",
+                    "city": "Somelake City",
+                    "country": "Example Country"
+                }
+            },
+            "vendor": {
+                "name": "John Smith Inc",
+                "adress": {
+                    street: "Example Way 1",
+                    "postalcode": "9909",
+                    "city": "Somelake City",
+                    "country": "Example Country"
+                }
+            },
+            "entries": [{
+                "count": 3,
+                "article": {
+                    description: "Testobject(on Sale)",
+                    "price_wTax": 23.3,
+                    "tax": "20%"
+                }
+            }, {
+                "count": 1,
+                "article": {
+                    description: "Testobject",
+                    "price_wTax": 46.6,
+                    "tax": "20%"
+                }
+            }],
+            "total_woTax": 0,
+            "total_Tax": 0,
+            "total_wTax": 0
+        };
+
+        function edit_entry(i) {
+
+        }
+
+        $(document).ready(function() {
+
+            var tax = {
+                "20%": 0.20,
+                "0": 0
+            };
+            var i, iSize, dataEntry;
+            for (i = 0, iSize = data["entries"].length; i < iSize; i += 1) {
+                dataEntry = data["entries"][i];
+                dataEntry["index"] = i;
+                dataEntry["sum_wTax"] = dataEntry["count"] * dataEntry["article"]["price_wTax"];
+                dataEntry["article"]["price_woTax"] = (dataEntry["article"]["price_wTax"]) / (1 + tax[(dataEntry["article"]["tax"])]);
+                dataEntry["sum_woTax"] = dataEntry["count"] * dataEntry["article"]["price_woTax"];
+                data["total_woTax"] += dataEntry["sum_woTax"];
+                data["total_wTax"] += dataEntry["sum_wTax"];
+                data["total_Tax"] += data["total_wTax"] - data["total_woTax"];
+            }
+
+            data["date"] = new Date();
+            //console.log(data);
+
+            Handlebars.registerPartial('reciept-table-entry-template', $("#reciept-table-entry-template").html());
+            Handlebars.registerHelper('formatCurrency', function(value) {
+                var nrFormat = new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR'
+                });
+                return nrFormat.format(value);
+            });
+            Handlebars.registerHelper('formatDate', function(value) {
+                var dateFormat = new Intl.DateTimeFormat('de-DE', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                return dateFormat.format(value);
+            });
+
+            var recipient = $("#reciept-header-template").html();
+            var rectemplate = Handlebars.compile(recipient);
+            $("body").append(rectemplate(data));
+
+            var source = $("#reciept-table-template").html();
+            var template = Handlebars.compile(source);
+            $("body").append(template(data));
+
+            var form = Handlebars.compile($("#reciept-input-template").html());
+            $("body").append(form(data));
+
+            var inputForm = $("inputform");
+            inputForm.find("#inputAccept").click(function(event) {
+                //data["entries"].append
+                event.stopPropagation();
+                console.log (event);
+                var entry = {
+                    "count": parseInt(inputForm.find("#inputCount")),
+                    "article": {
+                        description: inputForm.find("#inputDescription"),
+                        "price_wTax":  parseFloat(inputForm.find("#inputPrice")),
+                        "tax": "20%"
+                    }
+                };
+                console.log (entry);
+                
+                event.preventDefault();
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>
